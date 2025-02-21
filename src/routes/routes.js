@@ -1,12 +1,12 @@
 const express=require('express')
-const {UserCreaetd,getallData}=require('../controller/user')
+const {UserCreaetd,upateUser}=require('../controller/user')
 const routes=express.Router()
 
 routes.get('/',(req,res)=>{
-    res.send('this is new press backened ')
+    res.send('this is backened ')
 })
-
 routes.post('/user',UserCreaetd)
-routes.get('/getallData/:cat' ,getallData)
+routes.post('/upateUser',upateUser)
+
 
 module.exports=routes

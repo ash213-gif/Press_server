@@ -11,9 +11,8 @@ mongoose.connect( process.env.mongoDBurl )
 .then(()=>{console.log('mongoDB is connected ');})
 .catch((e)=>{console.log(e);})
 
-
 app.use('/',routes)
 app.use('/user',routes)
-app.use('/getallData',routes)
+app.use('/upateUser',routes)
 
 app.listen(port,(console.log(`this port is running on ${port}`)))
