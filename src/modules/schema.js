@@ -2,8 +2,8 @@ const mongoose=require('mongoose')
 
 const Userschema= new mongoose.Schema({
 
-    fullname:{ type:String , required:true ,trim:true },
-    email:{ type:String , required:true ,trim:true },
+    fullname:{ type:String  ,  required:true ,trim:true },
+    email:{ type:String , unique:true  , required:true ,trim:true },
     password:{ type:String , required:true ,trim:true },
     isdelete:{ type:Boolean , default:false},
    

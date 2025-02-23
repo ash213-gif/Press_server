@@ -5,8 +5,10 @@ const routes=express.Router()
 routes.get('/',(req,res)=>{
     res.send('this is backened ')
 })
+
+
 routes.post('/user',UserCreaetd)
-routes.post('/upateUser',upateUser)
+routes.post('/upateUser/:id',upateUser)
 
 
 module.exports=routes
