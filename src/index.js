@@ -15,4 +15,5 @@ app.use('/',routes)
 app.use('/user',routes)
 app.use('/upateUser',routes)
 
+
 app.listen(port,(console.log(`this port is running on ${port}`)))

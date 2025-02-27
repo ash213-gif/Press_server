@@ -1,32 +1,41 @@
 const UserDAB = require('../modules/schema')
-const {validfullName,validpaswword,validemail }=require('../validation/validation')
-const bcrypt=require('bcrypt')
+const bcrypt = require('bcrypt')
+const { userURLImg } = require('../cloudnary/imageurl')
 
 exports.UserCreaetd = async (req, res) => {
 
     try {
 
-        const data=req.body
-        const { fullname, email, password } = data;
+        const data = req.body;
+        const img = req.file
 
-        if (!fullname) { res.status(400).send('please provide a name ') }
-        if(!validfullName(fullname)){ res.status(400).send('please provide a validfullname') }
+        const { email, password } = data
+        const randomOTP = Math.floor(1000 + Math.random() * 9000);
 
-        if (!email) { res.status(400).send('please provide a email ') }
-        if(!validemail(email)){ res.status(400).send('please provide a valid email') }
+        const checkMail = UserDAB.findOneAndUpdate({ email: email }, { $set: { userverifyOTP: randomOTP } }, { new: true })
 
+        if (checkMail) {
 
-        if (!password) { res.status(400).send('please provide a password ') }
-        if(!validpaswword(password)){ res.status(400).send('please provide a valid password') }
+            if (!checkMail.IsActive) return res.status(400).send({ status: false, message: 'you account is blocked ' })
+            if (checkMail.isdelete) return res.status(400).send({ status: false, message: 'you account is deleted  ' })
+            if (checkMail.isVerify) return res.status(400).send({ status: false, message: 'you are already please login  ' })
 
-        const checkMail= await UserDAB.findOne({email:email})
-        if(checkMail) { return res.status(400).send({status:false , message:"email already exit " }) }
+                if(checkMail.isVerify== true ){
+                    return res.staus(200).send( { status:true , msg:'userverified '}) 
+                }
+        }
 
-        const bcryptpassword= await bcrypt.hash(password,10)
-        data.password=bcryptpassword
+        const bcryptpassword = await bcrypt.hash(password, 10)
+        data.password = bcryptpassword
+        data.userverifyOTP = randomOTP
+
+        if (img) {
+            data.userIMG = await userURLImg(img.path)
+        }
 
         const udata = await UserDAB.create(data)
         res.status(201).send(udata)
+
 
     } catch (e) { res.status(400).send({ status: false, message: e.message }) }
 
@@ -48,12 +57,6 @@ exports.upateUser = async (req, res) => {
     } catch (e) { res.status(500).send({ status: false, message: e.message }) }
 
 }
-
-
-
-
-
-
 
 
 // questionss
