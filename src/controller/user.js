@@ -9,35 +9,19 @@ exports.UserCreaetd = async (req, res) => {
         const data = req.body;
         const img = req.file
 
-        const { email, password } = data
-        const randomOTP = Math.floor(1000 + Math.random() * 9000);
-
-        const checkMail = UserDAB.findOneAndUpdate({ email: email }, { $set: { userverifyOTP: randomOTP } }, { new: true })
-
-        if (checkMail) {
-
-            if (!checkMail.IsActive) return res.status(400).send({ status: false, message: 'you account is blocked ' })
-            if (checkMail.isdelete) return res.status(400).send({ status: false, message: 'you account is deleted  ' })
-            if (checkMail.isVerify) return res.status(400).send({ status: false, message: 'you are already please login  ' })
-
-                if(checkMail.isVerify== true ){
-                    return res.staus(200).send( { status:true , msg:'userverified '}) 
-                }
-        }
-
-        const bcryptpassword = await bcrypt.hash(password, 10)
-        data.password = bcryptpassword
-        data.userverifyOTP = randomOTP
-
         if (img) {
             data.userIMG = await userURLImg(img.path)
         }
+        const bcryptpassword = await bcrypt.hash(password, 10)
+        data.password = bcryptpassword
+
+        // pasword defind error aa raha haa 
 
         const udata = await UserDAB.create(data)
         res.status(201).send(udata)
+       
 
-
-    } catch (e) { res.status(400).send({ status: false, message: e.message }) }
+    } catch (e) { res.status(400).send({ status: false, msg: e.message }) }
 
 }
 

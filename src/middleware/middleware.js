@@ -6,7 +6,7 @@ exports.validAuth = (req, res , next) => {
     try {
 
         const data=req.body
-        const { fullname, email, password } = data;
+        const { fullname, email ,password } = data;
 
         if (!fullname) { res.status(400).send('please provide a name ') }
         if (!validfullName(fullname)) { res.status(400).send('please provide a validfullname') }
@@ -19,5 +19,6 @@ exports.validAuth = (req, res , next) => {
 
         next()
 
-    } catch (e) { return ({ status: false, message:e.message }) }
+    }     catch (err) { return res.status(500).send({ status: false, msg: err.message }) }
+
 }
